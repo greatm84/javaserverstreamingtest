@@ -16,9 +16,10 @@ object TestServer {
     @Throws(IOException::class, ClassNotFoundException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        val ss = ServerSocket(9090, 0, InetAddress.getByName(InetAddress.getLocalHost().hostName))
+        val ss = ServerSocket(9090, 5, InetAddress.getByName("192.168.0.128"))
         ss.use { ss ->
-            println("address is ${ss.channel} ${ss.localSocketAddress} ${ss.inetAddress}")
+            println("address is ${InetAddress.getLocalHost()} ${InetAddress.getLocalHost().hostName}")
+            println("host is ${ss.inetAddress.hostAddress} ${ss.inetAddress.hostName}")
             val s = ss.accept()
             println("hello, reach here?")
 //            val screenShot = Robot().createScreenCapture(Rectangle(Toolkit.getDefaultToolkit().screenSize))
@@ -30,13 +31,18 @@ object TestServer {
 //            val ois = MemoryCacheImageInputStream(`is`)
 //            displayImage(ImageIO.read(ois))
 
-
             val file = File("G:\\intellijProj\\SocketTest\\src\\breadmilk.png")
             val bi = ImageIO.read(file)
             val newImage = BufferedImage(bi.width, bi.height, BufferedImage.TYPE_INT_ARGB)
+            val g = newImage.createGraphics()
+            g.drawImage(bi, 0, 0, null)
+            g.dispose()
+
             val byteArrayO = MemoryCacheImageOutputStream(s.getOutputStream())
             ImageIO.write(newImage, "PNG", byteArrayO)
             byteArrayO.flush()
+
+            println("send done ${byteArrayO.length()} ${newImage.width} ${newImage.height}")
 
             s.close()
         }
