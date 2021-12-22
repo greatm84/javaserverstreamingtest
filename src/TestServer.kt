@@ -16,7 +16,7 @@ object TestServer {
     @Throws(IOException::class, ClassNotFoundException::class)
     @JvmStatic
     fun main(args: Array<String>) {
-        val ss = ServerSocket(9090, 5, InetAddress.getByName("192.168.0.128"))
+        val ss = ServerSocket(9090, 5, InetAddress.getByName(InetAddress.getLocalHost().hostAddress))
         ss.use { ss ->
             println("address is ${InetAddress.getLocalHost()} ${InetAddress.getLocalHost().hostName}")
             println("host is ${ss.inetAddress.hostAddress} ${ss.inetAddress.hostName}")
